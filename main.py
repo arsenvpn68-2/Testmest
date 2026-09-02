@@ -5,6 +5,7 @@ import re
 import subprocess
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from urllib.parse import quote
 import requests
 
 CONFIG_PATH = "public/config.json"
@@ -19,6 +20,7 @@ def load_config():
         except Exception:
             pass
     return {
+        "brand_name": "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽",
         "personal": [],
         "subs": [],
         "top_count": 20,
@@ -32,12 +34,33 @@ def save_config(config_data):
         json.dump(config_data, f, indent=2, ensure_ascii=False)
 
 
+def rename_node(node_link, new_name):
+    """تغییر نام سرورهای عمومی بدون دست زدن به سرورهای شخصی"""
+    try:
+        if node_link.startswith("vmess://"):
+            b64_data = node_link.replace("vmess://", "")
+            b64_data += "=" * (-len(b64_data) % 4)
+            decoded = base64.b64decode(b64_data).decode("utf-8", errors="ignore")
+            vmess_json = json.loads(decoded)
+            vmess_json["ps"] = new_name
+            new_b64 = base64.b64encode(
+                json.dumps(vmess_json, ensure_ascii=False).encode("utf-8")
+            ).decode("utf-8")
+            return "vmess://" + new_b64
+        elif "#" in node_link:
+            base_part = node_link.split("#")[0]
+            return f"{base_part}#{quote(new_name)}"
+        else:
+            return f"{node_link}#{quote(new_name)}"
+    except Exception:
+        return node_link
+
+
 def fetch_and_decode_subs(sub_urls):
     raw_nodes = []
     pattern = re.compile(
         r"^(vless|vmess|trojan|ss|ssr|tuic|hysteria2)://", re.IGNORECASE
     )
-
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
@@ -52,13 +75,14 @@ def fetch_and_decode_subs(sub_urls):
         try:
             r = requests.get(url, headers=headers, timeout=12)
             content = r.text.strip()
-
-            # تلاش برای دکود Base64
             try:
                 decoded = base64.b64decode(content).decode(
                     "utf-8", errors="ignore"
                 )
-                if any(p in decoded for p in ["vless://", "vmess://", "trojan://", "ss://"]):
+                if any(
+                    p in decoded
+                    for p in ["vless://", "vmess://", "trojan://", "ss://"]
+                ):
                     content = decoded
             except Exception:
                 pass
@@ -97,7 +121,7 @@ def test_single_node(node_info):
 
     json_str = convert_node(node_link, "v2ray")
     if not json_str:
-        return node_link, 0.1  # اگر لاجیک تبدیل اوکی بود ولی تست نشد، حذف نشود
+        return node_link, 0.1
 
     try:
         outbound_config = json.loads(json_str)
@@ -175,10 +199,11 @@ def main():
     config = load_config()
     current_time = int(time.time())
 
-    print("شروع فرایند پردازش و تست...")
+    print("شروع فرایند پردازش...")
     personal_nodes = config.get("personal", [])
     sub_urls = config.get("subs", [])
     top_count = config.get("top_count", 20)
+    brand_name = config.get("brand_name", "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽")
 
     dynamic_nodes = fetch_and_decode_subs(sub_urls)
     print(f"تعداد {len(dynamic_nodes)} سرور عمومی دریافت شد.")
@@ -201,7 +226,14 @@ def main():
     else:
         best_dynamic = []
 
-    final_nodes = personal_nodes + best_dynamic
+    # تغییر نام بر اساس متنی که در پنل وب وارد کردی
+    renamed_dynamic = []
+    for idx, node in enumerate(best_dynamic, start=1):
+        custom_title = f"{brand_name} - {idx:02d}"
+        renamed_dynamic.append(rename_node(node, custom_title))
+
+    # ترکیب: سرورهای شخصی (دست‌نخورده) + سرورهای عمومی تغییرنام‌یافته
+    final_nodes = personal_nodes + renamed_dynamic
     generate_outputs(final_nodes)
 
     config["last_run_timestamp"] = current_time
