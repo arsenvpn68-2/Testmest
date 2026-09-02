@@ -2,7 +2,7 @@ name: Xray Smart Master Automation
 
 on:
   schedule:
-    - cron: '*/5 * * * *' # بیدار شدن هوشمند هر ۵ دقیقه
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -53,4 +53,4 @@ jobs:
           path: 'public'
 
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4ll
+        uses: actions/deploy-pages@v4
