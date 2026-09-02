@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل اختصاصی مدیریت Xray</title>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #0284c7; --text: #f8fafc; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; direction: rtl; }
+        .container { max-width: 850px; margin: auto; }
+        .card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #334155; }
+        h1, h3 { color: #38bdf8; margin-top: 0; }
+        label { display: block; margin-top: 12px; margin-bottom: 6px; color: #94a3b8; font-size: 0.9em; }
+        input, textarea, select { width: 100%; background: #0f172a; border: 1px solid #334155; color: #38bdf8; border-radius: 8px; padding: 10px; box-sizing: border-box; font-family: monospace; }
+        textarea { height: 110px; resize: vertical; }
+        .btn { background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 15px; margin-left: 10px; }
+        .btn:hover { opacity: 0.9; }
+        .btn-run { background: #16a34a; }
+        .sub-box { background: #0f172a; border: 1px solid #334155; padding: 10px; border-radius: 6px; word-break: break-all; color: #4ade80; font-family: monospace; }
+        .status { margin-top: 15px; font-weight: bold; color: #eab308; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ پنل مدیریت کامل و هوشمند Xray</h1>
+
+        <div class="card">
+            <h3>🔗 لینک‌های ثابت خروجی</h3>
+            <label>فرمت V2Ray / v2rayNG / Hiddify:</label>
+            <div class="sub-box" id="url-v2ray">...</div>
+            <label>فرمت Clash Meta / FlClash (YAML):</label>
+            <div class="sub-box" id="url-clash">...</div>
+            <label>فرمت Sing-box (JSON):</label>
+            <div class="sub-box" id="url-singbox">...</div>
+        </div>
+
+        <div class="card">
+            <h3>🔑 اطلاعات اتصال به GitHub API</h3>
+            <label>توکن شخصی گیت‌هاب (Personal Access Token):</label>
+            <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx">
+            <label>نام کاربری گیت‌هاب (Username):</label>
+            <input type="text" id="gh-owner" placeholder="مثال: myaccount">
+            <label>نام ریپازیتوری (Repository):</label>
+            <input type="text" id="gh-repo" placeholder="مثال: xray-panel">
+            <button class="btn" onclick="saveCredentials()">ذخیره کلیدها در مرورگر</button>
+        </div>
+
+        <div class="card">
+            <h3>⚙️ تنظیمات سرورها و زمان‌بندی</h3>
+            
+            <label>🔒 سرورهای شخصی (دست‌نخورده، ثابت و در صدر خروجی):</label>
+            <textarea id="personal-nodes" placeholder="vless://...\nvmess://..."></textarea>
+
+            <label>🌐 لینک‌های سابسکریپشن عمومی (برای استخراج بهترین سرورها):</label>
+            <textarea id="sub-urls" placeholder="https://site.com/sub1\nhttps://site.com/sub2"></textarea>
+
+            <div style="display: flex; gap: 15px;">
+                <div style="flex: 1;">
+                    <label>🔢 تعداد سرورهای عمومی برتر در خروجی:</label>
+                    <input type="number" id="top-count" value="20" min="5" max="100">
+                </div>
+                <div style="flex: 1;">
+                    <label>⏱️ بازه زمانی تست خودکار سرورها:</label>
+                    <select id="schedule-interval">
+                        <option value="10">هر ۱۰ دقیقه</option>
+                        <option value="30">هر ۳۰ دقیقه</option>
+                        <option value="60">هر ۱ ساعت</option>
+                        <option value="120" selected>هر ۲ ساعت</option>
+                        <option value="360">هر ۶ ساعت</option>
+                        <option value="1440">هر ۲۴ ساعت (روزانه)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn" onclick="updateConfigOnGithub()">💾 ذخیره تغییرات روی گیت‌هاب</button>
+            <button class="btn btn-run" onclick="triggerWorkflow()">🚀 اجرای فوری تست سرعت</button>
+
+            <div class="status" id="status-msg"></div>
+        </div>
+    </div>
+
+    <script>
+        const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '').replace(/\/$/, '') + '/';
+        document.getElementById('url-v2ray').innerText = baseUrl + 'sub.txt';
+        document.getElementById('url-clash').innerText = baseUrl + 'clash.yaml';
+        document.getElementById('url-singbox').innerText = baseUrl + 'singbox.json';
+
+        document.getElementById('gh-token').value = localStorage.getItem('gh_token') || '';
+        document.getElementById('gh-owner').value = localStorage.getItem('gh_owner') || '';
+        document.getElementById('gh-repo').value = localStorage.getItem('gh_repo') || '';
+
+        function saveCredentials() {
+            localStorage.setItem('gh_token', document.getElementById('gh-token').value.trim());
+            localStorage.setItem('gh_owner', document.getElementById('gh-owner').value.trim());
+            localStorage.setItem('gh_repo', document.getElementById('gh-repo').value.trim());
+            alert('اطلاعات دسترسی با موفقیت در مرورگر ذخیره شد.');
+        }
+
+        fetch('config.json?t=' + Date.now())
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('personal-nodes').value = (data.personal || []).join('\n');
+                document.getElementById('sub-urls').value = (data.subs || []).join('\n');
+                if(data.top_count) document.getElementById('top-count').value = data.top_count;
+                if(data.interval_minutes) document.getElementById('schedule-interval').value = data.interval_minutes;
+            }).catch(() => {});
+
+        async function updateConfigOnGithub() {
+            const token = localStorage.getItem('gh_token');
+            const owner = localStorage.getItem('gh_owner');
+            const repo = localStorage.getItem('gh_repo');
+            const status = document.getElementById('status-msg');
+
+            if (!token || !owner || !repo) {
+                alert('لطفا ابتدا مشخصات گیت‌هاب را تکمیل کنید.');
+                return;
+            }
+
+            status.innerText = "در حال ذخیره‌سازی تنظیمات در گیت‌هاب...";
+
+            let currentConfig = {};
+            let sha = "";
+            try {
+                const getFile = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/public/config.json`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                if (getFile.ok) {
+                    const fileData = await getFile.json();
+                    sha = fileData.sha;
+                    currentConfig = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+                }
+            } catch(e) {}
+
+            currentConfig.personal = document.getElementById('personal-nodes').value.split('\n').map(s=>s.trim()).filter(Boolean);
+            currentConfig.subs = document.getElementById('sub-urls').value.split('\n').map(s=>s.trim()).filter(Boolean);
+            currentConfig.top_count = parseInt(document.getElementById('top-count').value) || 20;
+            currentConfig.interval_minutes = parseInt(document.getElementById('schedule-interval').value) || 120;
+
+            const jsonString = JSON.stringify(currentConfig, null, 2);
+            const encodedContent = btoa(unescape(encodeURIComponent(jsonString)));
+
+            try {
+                const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/public/config.json`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: "Update config via Web Panel", content: encodedContent, sha: sha })
+                });
+
+                if (res.ok) status.innerText = "✅ تنظیمات با موفقیت روی گیت‌هاب ذخیره شد!";
+                else status.innerText = "❌ خطا در ذخیره تنظیمات. کلید دسترسی (Token) یا آدرس‌ها را بررسی کنید.";
+            } catch (e) {
+                status.innerText = "❌ خطا: " + e.message;
+            }
+        }
+
+        async function triggerWorkflow() {
+            const token = localStorage.getItem('gh_token');
+            const owner = localStorage.getItem('gh_owner');
+            const repo = localStorage.getItem('gh_repo');
+            const status = document.getElementById('status-msg');
+
+            if (!token || !owner || !repo) return alert('مشخصات اتصال کامل نیست.');
+
+            status.innerText = "در حال ارسال دستور تست سرعت به اکشن...";
+            try {
+                const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/main.yml/dispatches`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ref: 'main' })
+                });
+                if (res.status === 204) status.innerText = "🚀 تست سرعت شروع شد! تا ۳ الی ۵ دقیقه دیگر خروجی‌ها آپدیت می‌شوند.";
+                else status.innerText = "❌ خطا در اجرای تست فوری.";
+            } catch (e) {
+                status.innerText = "❌ خطا: " + e.message;
+            }
+        }
+    </script>
+</body>
+</html>
