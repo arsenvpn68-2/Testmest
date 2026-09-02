@@ -8,7 +8,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import requests
 
 CONFIG_PATH = "public/config.json"
-TEST_URL = "https://speed.cloudflare.com/__down?bytes=5000000"
+TEST_URL = "https://www.gstatic.com/generate_204"
 
 
 def load_config():
@@ -38,18 +38,28 @@ def fetch_and_decode_subs(sub_urls):
         r"^(vless|vmess|trojan|ss|ssr|tuic|hysteria2)://", re.IGNORECASE
     )
 
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+            " (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        )
+    }
+
     for url in sub_urls:
-        if not url.strip():
+        url = url.strip()
+        if not url:
             continue
         try:
-            r = requests.get(
-                url.strip(),
-                headers={"User-Agent": "v2rayNG/1.8.5"},
-                timeout=8,
-            )
+            r = requests.get(url, headers=headers, timeout=12)
             content = r.text.strip()
+
+            # تلاش برای دکود Base64
             try:
-                content = base64.b64decode(content).decode("utf-8", errors="ignore")
+                decoded = base64.b64decode(content).decode(
+                    "utf-8", errors="ignore"
+                )
+                if any(p in decoded for p in ["vless://", "vmess://", "trojan://", "ss://"]):
+                    content = decoded
             except Exception:
                 pass
 
@@ -57,8 +67,8 @@ def fetch_and_decode_subs(sub_urls):
                 line = line.strip()
                 if pattern.match(line):
                     raw_nodes.append(line)
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"Error fetching sub {url}: {e}")
 
     return list(set(raw_nodes))
 
@@ -75,7 +85,7 @@ def convert_node(node_link, target_format):
             "--target",
             target_format,
         ]
-        res = subprocess.check_output(cmd, stderr=subprocess.DEVNULL, timeout=5)
+        res = subprocess.check_output(cmd, stderr=subprocess.DEVNULL, timeout=8)
         return res.decode("utf-8")
     except Exception:
         return None
@@ -83,16 +93,16 @@ def convert_node(node_link, target_format):
 
 def test_single_node(node_info):
     index, node_link = node_info
-    port = 10800 + (index % 500)
+    port = 10800 + (index % 1000)
 
     json_str = convert_node(node_link, "v2ray")
     if not json_str:
-        return None, 0
+        return node_link, 0.1  # اگر لاجیک تبدیل اوکی بود ولی تست نشد، حذف نشود
 
     try:
         outbound_config = json.loads(json_str)
     except Exception:
-        return None, 0
+        return node_link, 0.1
 
     config_filename = f"temp_xray_{port}.json"
     full_config = {
@@ -114,25 +124,20 @@ def test_single_node(node_info):
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
-    time.sleep(1.0)
+    time.sleep(1.2)
 
     proxies = {
         "http": f"socks5h://127.0.0.1:{port}",
         "https": f"socks5h://127.0.0.1:{port}",
     }
-    speed_mbps = 0
+    score = 0.1
 
     try:
         t0 = time.time()
-        res = requests.get(TEST_URL, proxies=proxies, timeout=3.5, stream=True)
-        downloaded = 0
-        for chunk in res.iter_content(chunk_size=32768):
-            downloaded += len(chunk)
-            if time.time() - t0 > 3.0:
-                break
-        dt = time.time() - t0
-        if dt > 0 and downloaded > 0:
-            speed_mbps = (downloaded * 8) / (dt * 1024 * 1024)
+        res = requests.get(TEST_URL, proxies=proxies, timeout=5)
+        if res.status_code in [200, 204]:
+            latency = time.time() - t0
+            score = max(1.0, 10.0 - latency)
     except Exception:
         pass
     finally:
@@ -141,7 +146,7 @@ def test_single_node(node_info):
         if os.path.exists(config_filename):
             os.remove(config_filename)
 
-    return node_link, speed_mbps
+    return node_link, score
 
 
 def generate_outputs(final_nodes):
@@ -169,46 +174,39 @@ def generate_outputs(final_nodes):
 def main():
     config = load_config()
     current_time = int(time.time())
-    interval_sec = config.get("interval_minutes", 120) * 60
-    last_run = config.get("last_run_timestamp", 0)
 
-    # بررسی زمان‌بندی هوشمند در اجراهای زمان‌بندی‌شده اکشن
-    if os.environ.get("GITHUB_EVENT_NAME") == "schedule":
-        if (current_time - last_run) < interval_sec:
-            print("زمان تست فرا نرسیده است. خروج سریع.")
-            return
-
-    print("شروع فرایند پردازش و تست سرعت...")
+    print("شروع فرایند پردازش و تست...")
     personal_nodes = config.get("personal", [])
     sub_urls = config.get("subs", [])
     top_count = config.get("top_count", 20)
 
     dynamic_nodes = fetch_and_decode_subs(sub_urls)
-    print(f"تعداد {len(dynamic_nodes)} سرور عمومی برای تست استخراج شد.")
+    print(f"تعداد {len(dynamic_nodes)} سرور عمومی دریافت شد.")
 
-    indexed_nodes = list(enumerate(dynamic_nodes))
-    tested_results = []
+    if dynamic_nodes:
+        indexed_nodes = list(enumerate(dynamic_nodes))
+        tested_results = []
 
-    # اجرای موازی تست‌ها با ۱۰ ورکر هم‌زمان
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        futures = [
-            executor.submit(test_single_node, item) for item in indexed_nodes
-        ]
-        for future in as_completed(futures):
-            link, speed = future.result()
-            if link and speed > 0:
-                tested_results.append((link, speed))
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            futures = [
+                executor.submit(test_single_node, item) for item in indexed_nodes
+            ]
+            for future in as_completed(futures):
+                link, score = future.result()
+                if link:
+                    tested_results.append((link, score))
 
-    tested_results.sort(key=lambda x: x[1], reverse=True)
-    best_dynamic = [x[0] for x in tested_results[:top_count]]
+        tested_results.sort(key=lambda x: x[1], reverse=True)
+        best_dynamic = [x[0] for x in tested_results[:top_count]]
+    else:
+        best_dynamic = []
 
-    # ترکیب سرورها: شخصی‌ها دست‌نخورده در ابتدا + سرورهای عمومی برتر
     final_nodes = personal_nodes + best_dynamic
     generate_outputs(final_nodes)
 
     config["last_run_timestamp"] = current_time
     save_config(config)
-    print("عملیات با موفقیت به پایان رسید.")
+    print(f"عملیات تمام شد. مجموع سرورها: {len(final_nodes)}")
 
 
 if __name__ == "__main__":
