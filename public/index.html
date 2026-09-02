@@ -46,21 +46,24 @@
         </div>
 
         <div class="card">
-            <h3>⚙️ تنظیمات سرورها و زمان‌بندی</h3>
+            <h3>⚙️ تنظیمات سرورها و برندینگ</h3>
             
-            <label>🔒 سرورهای شخصی (دست‌نخورده، ثابت و در صدر خروجی):</label>
+            <label>🏷️ نام دلخواه برای برندینگ سرورهای عمومی:</label>
+            <input type="text" id="brand-name" placeholder="مثال: 𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽">
+
+            <label>🔒 سرورهای شخصی (دست‌نخورده و بدون تغییر نام):</label>
             <textarea id="personal-nodes" placeholder="vless://...\nvmess://..."></textarea>
 
-            <label>🌐 لینک‌های سابسکریپشن عمومی (برای استخراج بهترین سرورها):</label>
+            <label>🌐 لینک‌های سابسکریپشن عمومی (برای استخراج سرور):</label>
             <textarea id="sub-urls" placeholder="https://site.com/sub1\nhttps://site.com/sub2"></textarea>
 
             <div style="display: flex; gap: 15px;">
                 <div style="flex: 1;">
-                    <label>🔢 تعداد سرورهای عمومی برتر در خروجی:</label>
+                    <label>🔢 تعداد سرورهای عمومی برتر:</label>
                     <input type="number" id="top-count" value="20" min="5" max="100">
                 </div>
                 <div style="flex: 1;">
-                    <label>⏱️ بازه زمانی تست خودکار سرورها:</label>
+                    <label>⏱️ بازه زمانی تست خودکار:</label>
                     <select id="schedule-interval">
                         <option value="10">هر ۱۰ دقیقه</option>
                         <option value="30">هر ۳۰ دقیقه</option>
@@ -99,6 +102,7 @@
         fetch('config.json?t=' + Date.now())
             .then(r => r.json())
             .then(data => {
+                document.getElementById('brand-name').value = data.brand_name || '𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽';
                 document.getElementById('personal-nodes').value = (data.personal || []).join('\n');
                 document.getElementById('sub-urls').value = (data.subs || []).join('\n');
                 if(data.top_count) document.getElementById('top-count').value = data.top_count;
@@ -131,6 +135,7 @@
                 }
             } catch(e) {}
 
+            currentConfig.brand_name = document.getElementById('brand-name').value.trim() || '𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽';
             currentConfig.personal = document.getElementById('personal-nodes').value.split('\n').map(s=>s.trim()).filter(Boolean);
             currentConfig.subs = document.getElementById('sub-urls').value.split('\n').map(s=>s.trim()).filter(Boolean);
             currentConfig.top_count = parseInt(document.getElementById('top-count').value) || 20;
@@ -143,11 +148,11 @@
                 const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/public/config.json`, {
                     method: 'PUT',
                     headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: "Update config via Web Panel", content: encodedContent, sha: sha })
+                    body: JSON.stringify({ message: "Update config & brand name via Web Panel", content: encodedContent, sha: sha })
                 });
 
-                if (res.ok) status.innerText = "✅ تنظیمات با موفقیت روی گیت‌هاب ذخیره شد!";
-                else status.innerText = "❌ خطا در ذخیره تنظیمات. کلید دسترسی (Token) یا آدرس‌ها را بررسی کنید.";
+                if (res.ok) status.innerText = "✅ تنظیمات و نام برند با موفقیت ذخیره شد!";
+                else status.innerText = "❌ خطا در ذخیره تنظیمات.";
             } catch (e) {
                 status.innerText = "❌ خطا: " + e.message;
             }
