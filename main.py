@@ -22,25 +22,14 @@ def load_config():
                 data = json.load(f)
                 if "profiles" in data:
                     return data
-                else:
-                    return {
-                        "profiles": {
-                            "default": {
-                                "brand_name": data.get(
-                                    "brand_name", "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽"
-                                ),
-                                "personal": data.get("personal", []),
-                                "subs": data.get("subs", []),
-                                "top_count": data.get("top_count", 20),
-                            }
-                        }
-                    }
         except Exception:
             pass
     return {
         "profiles": {
             "default": {
                 "brand_name": "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽",
+                "total_gb": 50,
+                "expire_days": 30,
                 "personal": [],
                 "subs": [],
                 "top_count": 20,
@@ -235,13 +224,24 @@ def test_single_node(node_info):
     return node_link, score
 
 
-def generate_outputs(profile_name, final_nodes):
+def create_info_node(total_gb, expire_days):
+    """ساخت سرور نمایش‌دهنده اطلاعات حساب در بالای نرم‌افزارها"""
+    info_title = f"📊 Traffic: {total_gb} GB | ⏳ Remaining: {expire_days} Days"
+    dummy_vless = f"vless://00000000-0000-0000-0000-000000000000@127.0.0.1:8080?type=tcp#{quote(info_title)}"
+    return dummy_vless
+
+
+def generate_outputs(profile_name, final_nodes, total_gb, expire_days):
     os.makedirs("public", exist_ok=True)
     suffix = "" if profile_name == "default" else f"_{profile_name}"
 
-    b64_out = base64.b64encode("\n".join(final_nodes).encode("utf-8")).decode(
-        "utf-8"
-    )
+    # اضافه کردن سرور اطلاع‌رسانی به ابتدای لیست
+    info_node = create_info_node(total_gb, expire_days)
+    all_nodes_with_info = [info_node] + final_nodes
+
+    b64_out = base64.b64encode(
+        "\n".join(all_nodes_with_info).encode("utf-8")
+    ).decode("utf-8")
     with open(f"public/sub{suffix}.txt", "w", encoding="utf-8") as f:
         f.write(b64_out)
 
@@ -258,9 +258,34 @@ def generate_outputs(profile_name, final_nodes):
             f.write(singbox_json)
 
 
+def cleanup_removed_profiles(active_profiles):
+    """حذف فایل‌های مربوط به پروفایل‌هایی که پاک شده‌اند"""
+    os.makedirs("public", exist_ok=True)
+    for fname in os.listdir("public"):
+        if (
+            fname.startswith("sub_")
+            or fname.startswith("clash_")
+            or fname.startswith("singbox_")
+        ):
+            prof = (
+                fname.split("_", 1)[1]
+                .replace(".txt", "")
+                .replace(".yaml", "")
+                .replace(".json", "")
+            )
+            if prof not in active_profiles:
+                try:
+                    os.remove(os.path.join("public", fname))
+                    print(f"فایل مربوط به پروفایل حذف‌شده پاک شد: {fname}")
+                except Exception:
+                    pass
+
+
 def main():
     config = load_config()
     profiles = config.get("profiles", {})
+
+    cleanup_removed_profiles(profiles.keys())
 
     print(f"شروع فرایند برای {len(profiles)} پروفایل...")
 
@@ -270,6 +295,8 @@ def main():
         sub_urls = prof_data.get("subs", [])
         top_count = prof_data.get("top_count", 20)
         brand_name = prof_data.get("brand_name", "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽")
+        total_gb = prof_data.get("total_gb", 50)
+        expire_days = prof_data.get("expire_days", 30)
 
         dynamic_nodes = fetch_and_decode_subs(sub_urls)
         print(f"تعداد {len(dynamic_nodes)} سرور عمومی دریافت شد.")
@@ -300,7 +327,7 @@ def main():
             renamed_dynamic.append(rename_node(node, custom_title))
 
         final_nodes = personal_nodes + renamed_dynamic
-        generate_outputs(prof_name, final_nodes)
+        generate_outputs(prof_name, final_nodes, total_gb, expire_days)
 
     print("\nعملیات ساخت کلیه پروفایل‌ها با موفقیت تمام شد.")
 
