@@ -1,20 +1,33 @@
 {
-  "personal": [
-    "vless://153639be-6109-4037-9ea5-996754061bb6@web-production-7c324.up.railway.app:443?path=%2Fvl-ws&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=web-production-7c324.up.railway.app&fp=chrome&type=ws&allowInsecure=0&sni=web-production-7c324.up.railway.app#%F0%9F%87%B3%F0%9F%87%B1-%F0%9D%94%B8%F0%9D%95%A3%F0%9D%95%A4%F0%9D%95%96%F0%9D%95%9F%F0%9D%95%8D%E2%84%99%E2%84%95%F0%93%84%82%F0%93%86%83",
-    "vmess://eyJhZGQiOiJ3ZWItcHJvZHVjdGlvbi03YzMyNC51cC5yYWlsd2F5LmFwcCIsImFpZCI6IjAiLCJhbHBuIjoiaHR0cC8xLjEiLCJmcCI6IiIsImhvc3QiOiJ3ZWItcHJvZHVjdGlvbi03YzMyNC51cC5yYWlsd2F5LmFwcCIsImlkIjoiMTUzNjM5YmUtNjEwOS00MDM3LTllYTUtOTk2NzU0MDYxYmI2IiwiaW5zZWN1cmUiOiIwIiwibmV0Ijoid3MiLCJwYXRoIjoiL3ZtLXdzIiwicGNzIjoiIiwicG9ydCI6IjQ0MyIsInBzIjoi8J+Hs/Cfh7Et8J2UuPCdlaPwnZWk8J2VlvCdlZ/wnZWN4oSZ4oSV8JOEgvCThoMiLCJzY3kiOiJhdXRvIiwic25pIjoid2ViLXByb2R1Y3Rpb24tN2MzMjQudXAucmFpbHdheS5hcHAiLCJ0bHMiOiJ0bHMiLCJ0eXBlIjoiLS0tIiwidiI6IjIiLCJ2Y24iOiIifQ==",
-    "vless://153639be-6109-4037-9ea5-996754061bb6@web-production-7c324.up.railway.app:443?mode=auto&path=%2Fvl-xhttp&security=tls&alpn=h2&encryption=none&insecure=0&host=web-production-7c324.up.railway.app&fp=chrome&type=xhttp&allowInsecure=0&sni=web-production-7c324.up.railway.app#%F0%9F%87%B3%F0%9F%87%B1-%F0%9D%94%B8%F0%9D%95%A3%F0%9D%95%A4%F0%9D%95%96%F0%9D%95%9F%F0%9D%95%8D%E2%84%99%E2%84%95%F0%93%84%82%F0%93%86%83",
-    "vless://52c52c3e-6f11-802d-6767-0785457cf851@teodor-production-b1f9.up.railway.app:443?mode=stream-up&path=%2Fxhttp-siz10%2Fstream-up%2F52c52c3e-6f11-802d-6767-0785457cf851&security=tls&alpn=h2%2Chttp%2F1.1&encryption=none&insecure=0&host=teodor-production-b1f9.up.railway.app&fp=chrome&type=xhttp&allowInsecure=0&sni=teodor-production-b1f9.up.railway.app#%F0%9F%87%B8%F0%9F%87%AC-%F0%9D%94%B8%F0%9D%95%A3%F0%9D%95%A4%F0%9D%95%96%F0%9D%95%9F%F0%9D%95%8D%E2%84%99%E2%84%95%F0%93%84%82%F0%93%86%83",
-    "vless://6d077dcc-9c94-39b5-4009-c30cde8c7c04@teodor-production-b1f9.up.railway.app:443?mode=packet-up&path=%2Fxhttp-siz10%2Fpacket-up%2F6d077dcc-9c94-39b5-4009-c30cde8c7c04&security=tls&alpn=h2%2Chttp%2F1.1&encryption=none&insecure=0&host=teodor-production-b1f9.up.railway.app&fp=chrome&type=xhttp&allowInsecure=0&sni=teodor-production-b1f9.up.railway.app#%F0%9F%87%B8%F0%9F%87%AC-%F0%9D%94%B8%F0%9D%95%A3%F0%9D%95%A4%F0%9D%95%96%F0%9D%95%9F%F0%9D%95%8D%E2%84%99%E2%84%95%F0%93%84%82%F0%93%86%83",
-    "vless://a3085801-1790-a2ec-62df-79028f1ef303@teodor-production-b1f9.up.railway.app:443?path=%2Fws%2Fa3085801-1790-a2ec-62df-79028f1ef303&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=teodor-production-b1f9.up.railway.app&fp=chrome&type=ws&allowInsecure=0&sni=teodor-production-b1f9.up.railway.app#%F0%9F%87%B8%F0%9F%87%AC-%F0%9D%94%B8%F0%9D%95%A3%F0%9D%95%A4%F0%9D%95%96%F0%9D%95%9F%F0%9D%95%8D%E2%84%99%E2%84%95%F0%93%84%82%F0%93%86%83"
-  ],
-  "subs": [
-    "https://arsenvpn68-5.panel1-cc4.workers.dev/sub/raw/Y3fMIUw_VV0JamCr?app=xray#%F0%9F%92%8E%20%F0%9D%94%B8%F0%9D%95%A3%F0%9D%95%A4%F0%9D%95%96%F0%9D%95%9F%F0%9D%95%8D%E2%84%99%E2%84%95%F0%93%84%82%F0%93%86%83%20%E2%9D%BB%E2%9D%BD%20Raw",
-    "https://ap1o50xfxh2ijvi0h.panel1-cc4.workers.dev/ArsenVPN68/sub/raw?app=xray#%F0%9F%92%A6%20BPB%20Raw",
-    "https://arsen68-arsen68-cccc.arsenlopez01.workers.dev/68e5a001-c3ce-4250-bb7f-a3bdb596fafd?b64",
-    "https://ju1nrwykr8zgh6489.panel3-3.workers.dev/oFYYdLbFGoAVO/sub/raw?app=xray#%F0%9F%92%A6%20BPB%20Raw"
-  ],
-  "top_count": 100,
-  "interval_minutes": 60,
-  "last_run_timestamp": 1788546507,
-  "brand_name": "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽"
+  "profiles": {
+    "default": {
+      "brand_name": "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽",
+      "personal": [
+        "vless://153639be-6109-4037-9ea5-996754061bb6@web-production-7c324.up.railway.app:443?path=%2Fvl-ws&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=web-production-7c324.up.railway.app&fp=chrome&type=ws&allowInsecure=0&sni=web-production-7c324.up.railway.app#%F0%9F%87%B3%F0%9F%87%B1-%F0%9D%94%B8%F0%9D%95%A3%F0%9D%95%A4%F0%9D%95%96%F0%9D%95%9F%F0%9D%95%8D%E2%84%99%E2%84%95%F0%93%84%82%F0%93%86%83",
+        "vmess://eyJhZGQiOiJ3ZWItcHJvZHVjdGlvbi03YzMyNC51cC5yYWlsd2F5LmFwcCIsImFpZCI6IjAiLCJhbHBuIjoiaHR0cC8xLjEiLCJmcCI6IiIsImhvc3QiOiJ3ZWItcHJvZHVjdGlvbi03YzMyNC51cC5yYWlsd2F5LmFwcCIsImlkIjoiMTUzNjM5YmUtNjEwOS00MDM3LTllYTUtOTk2NzU0MDYxYmI2IiwiaW5zZWN1cmUiOiIwIiwibmV0Ijoid3MiLCJwYXRoIjoiL3ZtLXdzIiwicGNzIjoiIiwicG9ydCI6IjQ0MyIsInBzIjoi8J+Hs/Cfh7Et8J2UuPCdlaPwnZWk8J2VlvCdlZ/wnZWN4oSZ4oSV8JOEgvCThoMiLCJzY3kiOiJhdXRvIiwic25pIjoid2ViLXByb2R1Y3Rpb24tN2MzMjQudXAucmFpbHdheS5hcHAiLCJ0bHMiOiJ0bHMiLCJ0eXBlIjoiLS0tIiwidiI6IjIiLCJ2Y24iOiIifQ==",
+        "vless://153639be-6109-4037-9ea5-996754061bb6@web-production-7c324.up.railway.app:443?mode=auto&path=%2Fvl-xhttp&security=tls&alpn=h2&encryption=none&insecure=0&host=web-production-7c324.up.railway.app&fp=chrome&type=xhttp&allowInsecure=0&sni=web-production-7c324.up.railway.app#%F0%9F%87%B3%F0%9F%87%B1-%F0%9D%94%B8%F0%9D%95%A3%F0%9D%95%A4%F0%9D%95%96%F0%9D%95%9F%F0%9D%95%8D%E2%84%99%E2%84%95%F0%93%84%82%F0%93%86%83",
+        "vless://52c52c3e-6f11-802d-6767-0785457cf851@teodor-production-b1f9.up.railway.app:443?mode=stream-up&path=%2Fxhttp-siz10%2Fstream-up%2F52c52c3e-6f11-802d-6767-0785457cf851&security=tls&alpn=h2%2Chttp%2F1.1&encryption=none&insecure=0&host=teodor-production-b1f9.up.railway.app&fp=chrome&type=xhttp&allowInsecure=0&sni=teodor-production-b1f9.up.railway.app#%F0%9F%87%B8%F0%9F%87%AC-%F0%9D%94%B8%F0%9D%95%A3%F0%9D%95%A4%F0%9D%95%96%F0%9D%95%9F%F0%9D%95%8D%E2%84%99%E2%84%95%F0%93%84%82%F0%93%86%83",
+        "vless://6d077dcc-9c94-39b5-4009-c30cde8c7c04@teodor-production-b1f9.up.railway.app:443?mode=packet-up&path=%2Fxhttp-siz10%2Fpacket-up%2F6d077dcc-9c94-39b5-4009-c30cde8c7c04&security=tls&alpn=h2%2Chttp%2F1.1&encryption=none&insecure=0&host=teodor-production-b1f9.up.railway.app&fp=chrome&type=xhttp&allowInsecure=0&sni=teodor-production-b1f9.up.railway.app#%F0%9F%87%B8%F0%9F%87%AC-%F0%9D%94%B8%F0%9D%95%A3%F0%9D%95%A4%F0%9D%95%96%F0%9D%95%9F%F0%9D%95%8D%E2%84%99%E2%84%95%F0%93%84%82%F0%93%86%83",
+        "vless://a3085801-1790-a2ec-62df-79028f1ef303@teodor-production-b1f9.up.railway.app:443?path=%2Fws%2Fa3085801-1790-a2ec-62df-79028f1ef303&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=teodor-production-b1f9.up.railway.app&fp=chrome&type=ws&allowInsecure=0&sni=teodor-production-b1f9.up.railway.app#%F0%9F%87%B8%F0%9F%87%AC-%F0%9D%94%B8%F0%9D%95%A3%F0%9D%95%A4%F0%9D%95%96%F0%9D%95%9F%F0%9D%95%8D%E2%84%99%E2%84%95%F0%93%84%82%F0%93%86%83"
+      ],
+      "subs": [
+        "https://arsenvpn68-5.panel1-cc4.workers.dev/sub/raw/Y3fMIUw_VV0JamCr?app=xray#%F0%9F%92%8E%20%F0%9D%94%B8%F0%9D%95%A3%F0%9D%95%A4%F0%9D%95%96%F0%9D%95%9F%F0%9D%95%8D%E2%84%99%E2%84%95%F0%93%84%82%F0%93%86%83%20%E2%9D%BB%E2%9D%BD%20Raw",
+        "https://ap1o50xfxh2ijvi0h.panel1-cc4.workers.dev/ArsenVPN68/sub/raw?app=xray#%F0%9F%92%A6%20BPB%20Raw",
+        "https://arsen68-arsen68-cccc.arsenlopez01.workers.dev/68e5a001-c3ce-4250-bb7f-a3bdb596fafd?b64",
+        "https://ju1nrwykr8zgh6489.panel3-3.workers.dev/oFYYdLbFGoAVO/sub/raw?app=xray#%F0%9F%92%A6%20BPB%20Raw"
+      ],
+      "top_count": 100
+    },
+    "nafas": {
+      "brand_name": "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 - nafas",
+      "personal": [],
+      "subs": [
+        "https://arsenvpn68-5.panel1-cc4.workers.dev/sub/raw/Y3fMIUw_VV0JamCr?app=xray#%F0%9F%92%8E%20%F0%9D%94%B8%F0%9D%95%A3%F0%9D%95%A4%F0%9D%95%96%F0%9D%95%9F%F0%9D%95%8D%E2%84%99%E2%84%95%F0%93%84%82%F0%93%86%83%20%E2%9D%BB%E2%9D%BD%20Raw",
+        "https://ap1o50xfxh2ijvi0h.panel1-cc4.workers.dev/ArsenVPN68/sub/raw?app=xray#%F0%9F%92%A6%20BPB%20Raw",
+        "https://arsen68-arsen68-cccc.arsenlopez01.workers.dev/68e5a001-c3ce-4250-bb7f-a3bdb596fafd?b64",
+        "https://ju1nrwykr8zgh6489.panel3-3.workers.dev/oFYYdLbFGoAVO/sub/raw?app=xray#%F0%9F%92%A6%20BPB%20Raw"
+      ],
+      "top_count": 20
+    }
+  }
 }
