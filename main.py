@@ -2,14 +2,18 @@ import base64
 import json
 import os
 import re
+import socket
 import subprocess
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from urllib.parse import quote
+from urllib.parse import parse_qs, quote, unquote, urlparse, urlunparse
 import requests
 
 CONFIG_PATH = "public/config.json"
 TEST_URL = "https://www.gstatic.com/generate_204"
+
+# کش برای جلوگیری از استعلام تکراری IPها
+GEO_CACHE = {}
 
 
 def load_config():
@@ -32,6 +36,57 @@ def load_config():
 def save_config(config_data):
     with open(CONFIG_PATH, "w", encoding="utf-8") as f:
         json.dump(config_data, f, indent=2, ensure_ascii=False)
+
+
+def get_flag_emoji(country_code):
+    """تبدیل کد کشور ISO مانند US به ایموجی پرچم 🇺🇸"""
+    if not country_code or len(country_code) != 2:
+        return "🌐"
+    country_code = country_code.upper()
+    return chr(127397 + ord(country_code[0])) + chr(
+        127397 + ord(country_code[1])
+    )
+
+
+def extract_host_from_node(node_link):
+    """استخراج آدرس سرور (IP یا domain) از انواع پروتکل‌ها"""
+    try:
+        if node_link.startswith("vmess://"):
+            b64_data = node_link.replace("vmess://", "")
+            b64_data += "=" * (-len(b64_data) % 4)
+            decoded = base64.b64decode(b64_data).decode("utf-8", errors="ignore")
+            vmess_json = json.loads(decoded)
+            return vmess_json.get("add", "")
+        else:
+            parsed = urlparse(node_link)
+            return parsed.hostname or ""
+    except Exception:
+        return ""
+
+
+def get_country_flag(node_link):
+    """شناسایی موقعیت مکانی و دریافت پرچم کشور"""
+    host = extract_host_from_node(node_link)
+    if not host:
+        return "🌐"
+
+    if host in GEO_CACHE:
+        return GEO_CACHE[host]
+
+    try:
+        ip = socket.gethostbyname(host)
+        url = f"http://ip-api.com/json/{ip}?fields=status,countryCode"
+        res = requests.get(url, timeout=3).json()
+        if res.get("status") == "success":
+            code = res.get("countryCode", "")
+            flag = get_flag_emoji(code)
+            GEO_CACHE[host] = flag
+            return flag
+    except Exception:
+        pass
+
+    GEO_CACHE[host] = "🌐"
+    return "🌐"
 
 
 def rename_node(node_link, new_name):
@@ -226,13 +281,14 @@ def main():
     else:
         best_dynamic = []
 
-    # تغییر نام بر اساس متنی که در پنل وب وارد کردی
+    # افزودن پرچم کشور به سرورهای عمومی برتر
     renamed_dynamic = []
     for idx, node in enumerate(best_dynamic, start=1):
-        custom_title = f"{brand_name} - {idx:02d}"
+        flag = get_country_flag(node)
+        custom_title = f"{flag} {brand_name} - {idx:02d}"
         renamed_dynamic.append(rename_node(node, custom_title))
 
-    # ترکیب: سرورهای شخصی (دست‌نخورده) + سرورهای عمومی تغییرنام‌یافته
+    # ترکیب: سرورهای شخصی (کاملاً دست‌نخورده) + سرورهای عمومی پرچمدار
     final_nodes = personal_nodes + renamed_dynamic
     generate_outputs(final_nodes)
 
