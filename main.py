@@ -6,13 +6,12 @@ import socket
 import subprocess
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from urllib.parse import parse_qs, quote, unquote, urlparse, urlunparse
+from urllib.parse import quote, urlparse
 import requests
 
 CONFIG_PATH = "public/config.json"
 TEST_URL = "https://www.gstatic.com/generate_204"
 
-# کش برای جلوگیری از استعلام تکراری IPها
 GEO_CACHE = {}
 
 
@@ -20,26 +19,37 @@ def load_config():
     if os.path.exists(CONFIG_PATH):
         try:
             with open(CONFIG_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
+                data = json.load(f)
+                if "profiles" in data:
+                    return data
+                else:
+                    return {
+                        "profiles": {
+                            "default": {
+                                "brand_name": data.get(
+                                    "brand_name", "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽"
+                                ),
+                                "personal": data.get("personal", []),
+                                "subs": data.get("subs", []),
+                                "top_count": data.get("top_count", 20),
+                            }
+                        }
+                    }
         except Exception:
             pass
     return {
-        "brand_name": "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽",
-        "personal": [],
-        "subs": [],
-        "top_count": 20,
-        "interval_minutes": 120,
-        "last_run_timestamp": 0,
+        "profiles": {
+            "default": {
+                "brand_name": "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽",
+                "personal": [],
+                "subs": [],
+                "top_count": 20,
+            }
+        }
     }
 
 
-def save_config(config_data):
-    with open(CONFIG_PATH, "w", encoding="utf-8") as f:
-        json.dump(config_data, f, indent=2, ensure_ascii=False)
-
-
 def get_flag_emoji(country_code):
-    """تبدیل کد کشور ISO مانند US به ایموجی پرچم 🇺🇸"""
     if not country_code or len(country_code) != 2:
         return "🌐"
     country_code = country_code.upper()
@@ -49,7 +59,6 @@ def get_flag_emoji(country_code):
 
 
 def extract_host_from_node(node_link):
-    """استخراج آدرس سرور (IP یا domain) از انواع پروتکل‌ها"""
     try:
         if node_link.startswith("vmess://"):
             b64_data = node_link.replace("vmess://", "")
@@ -65,7 +74,6 @@ def extract_host_from_node(node_link):
 
 
 def get_country_flag(node_link):
-    """شناسایی موقعیت مکانی و دریافت پرچم کشور"""
     host = extract_host_from_node(node_link)
     if not host:
         return "🌐"
@@ -90,7 +98,6 @@ def get_country_flag(node_link):
 
 
 def rename_node(node_link, new_name):
-    """تغییر نام سرورهای عمومی بدون دست زدن به سرورهای شخصی"""
     try:
         if node_link.startswith("vmess://"):
             b64_data = node_link.replace("vmess://", "")
@@ -228,73 +235,74 @@ def test_single_node(node_info):
     return node_link, score
 
 
-def generate_outputs(final_nodes):
+def generate_outputs(profile_name, final_nodes):
     os.makedirs("public", exist_ok=True)
+    suffix = "" if profile_name == "default" else f"_{profile_name}"
 
     b64_out = base64.b64encode("\n".join(final_nodes).encode("utf-8")).decode(
         "utf-8"
     )
-    with open("public/sub.txt", "w", encoding="utf-8") as f:
+    with open(f"public/sub{suffix}.txt", "w", encoding="utf-8") as f:
         f.write(b64_out)
 
     joined_nodes = "|".join(final_nodes)
 
     clash_yaml = convert_node(joined_nodes, "clash")
     if clash_yaml:
-        with open("public/clash.yaml", "w", encoding="utf-8") as f:
+        with open(f"public/clash{suffix}.yaml", "w", encoding="utf-8") as f:
             f.write(clash_yaml)
 
     singbox_json = convert_node(joined_nodes, "singbox")
     if singbox_json:
-        with open("public/singbox.json", "w", encoding="utf-8") as f:
+        with open(f"public/singbox{suffix}.json", "w", encoding="utf-8") as f:
             f.write(singbox_json)
 
 
 def main():
     config = load_config()
-    current_time = int(time.time())
+    profiles = config.get("profiles", {})
 
-    print("شروع فرایند پردازش...")
-    personal_nodes = config.get("personal", [])
-    sub_urls = config.get("subs", [])
-    top_count = config.get("top_count", 20)
-    brand_name = config.get("brand_name", "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽")
+    print(f"شروع فرایند برای {len(profiles)} پروفایل...")
 
-    dynamic_nodes = fetch_and_decode_subs(sub_urls)
-    print(f"تعداد {len(dynamic_nodes)} سرور عمومی دریافت شد.")
+    for prof_name, prof_data in profiles.items():
+        print(f"\n--- در حال پردازش پروفایل: {prof_name} ---")
+        personal_nodes = prof_data.get("personal", [])
+        sub_urls = prof_data.get("subs", [])
+        top_count = prof_data.get("top_count", 20)
+        brand_name = prof_data.get("brand_name", "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽")
 
-    if dynamic_nodes:
-        indexed_nodes = list(enumerate(dynamic_nodes))
-        tested_results = []
+        dynamic_nodes = fetch_and_decode_subs(sub_urls)
+        print(f"تعداد {len(dynamic_nodes)} سرور عمومی دریافت شد.")
 
-        with ThreadPoolExecutor(max_workers=10) as executor:
-            futures = [
-                executor.submit(test_single_node, item) for item in indexed_nodes
-            ]
-            for future in as_completed(futures):
-                link, score = future.result()
-                if link:
-                    tested_results.append((link, score))
+        if dynamic_nodes:
+            indexed_nodes = list(enumerate(dynamic_nodes))
+            tested_results = []
 
-        tested_results.sort(key=lambda x: x[1], reverse=True)
-        best_dynamic = [x[0] for x in tested_results[:top_count]]
-    else:
-        best_dynamic = []
+            with ThreadPoolExecutor(max_workers=10) as executor:
+                futures = [
+                    executor.submit(test_single_node, item)
+                    for item in indexed_nodes
+                ]
+                for future in as_completed(futures):
+                    link, score = future.result()
+                    if link:
+                        tested_results.append((link, score))
 
-    # افزودن پرچم کشور به سرورهای عمومی برتر
-    renamed_dynamic = []
-    for idx, node in enumerate(best_dynamic, start=1):
-        flag = get_country_flag(node)
-        custom_title = f"{flag} {brand_name} - {idx:02d}"
-        renamed_dynamic.append(rename_node(node, custom_title))
+            tested_results.sort(key=lambda x: x[1], reverse=True)
+            best_dynamic = [x[0] for x in tested_results[:top_count]]
+        else:
+            best_dynamic = []
 
-    # ترکیب: سرورهای شخصی (کاملاً دست‌نخورده) + سرورهای عمومی پرچمدار
-    final_nodes = personal_nodes + renamed_dynamic
-    generate_outputs(final_nodes)
+        renamed_dynamic = []
+        for idx, node in enumerate(best_dynamic, start=1):
+            flag = get_country_flag(node)
+            custom_title = f"{flag} {brand_name} - {idx:02d}"
+            renamed_dynamic.append(rename_node(node, custom_title))
 
-    config["last_run_timestamp"] = current_time
-    save_config(config)
-    print(f"عملیات تمام شد. مجموع سرورها: {len(final_nodes)}")
+        final_nodes = personal_nodes + renamed_dynamic
+        generate_outputs(prof_name, final_nodes)
+
+    print("\nعملیات ساخت کلیه پروفایل‌ها با موفقیت تمام شد.")
 
 
 if __name__ == "__main__":
