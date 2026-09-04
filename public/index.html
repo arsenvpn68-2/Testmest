@@ -20,6 +20,8 @@
         .sub-box { background: #0f172a; border: 1px solid #334155; padding: 10px; border-radius: 6px; word-break: break-all; color: #4ade80; font-family: monospace; }
         .status { margin-top: 15px; font-weight: bold; color: #eab308; }
         .profile-bar { display: flex; gap: 10px; align-items: center; background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #334155; }
+        .grid-2 { display: flex; gap: 15px; }
+        .grid-2 > div { flex: 1; }
     </style>
 </head>
 <body>
@@ -37,7 +39,7 @@
                 </div>
                 <div style="flex: 2;">
                     <label style="margin: 0 0 4px 0;">ایجاد پروفایل جدید (نام لاتین):</label>
-                    <input type="text" id="new-profile-name" placeholder="مثلا: user2 یا reza">
+                    <input type="text" id="new-profile-name" placeholder="مثلا: nafas">
                 </div>
                 <div style="flex: 1; margin-top: 18px;">
                     <button class="btn" style="margin:0; width:100%;" onclick="createNewProfile()">➕ ساخت</button>
@@ -72,28 +74,42 @@
             <label>🏷️ نام دلخواه برندینگ برای این کاربر:</label>
             <input type="text" id="brand-name" placeholder="مثال: 𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽">
 
+            <div class="grid-2">
+                <div>
+                    <label>📊 حجم کل اشتراک (گیگابایت):</label>
+                    <input type="number" id="total-gb" value="50" placeholder="مثلا 50">
+                </div>
+                <div>
+                    <label>⏳ مدت اعتبار (روز):</label>
+                    <input type="number" id="expire-days" value="30" placeholder="مثلا 30">
+                </div>
+            </div>
+
             <label>🔒 سرورهای شخصی این کاربر (دست‌نخورده):</label>
             <textarea id="personal-nodes" placeholder="vless://...\nvmess://..."></textarea>
 
             <label>🌐 لینک‌های سابسکریپشن عمومی این کاربر:</label>
             <textarea id="sub-urls" placeholder="https://site.com/sub1\nhttps://site.com/sub2"></textarea>
 
-            <div style="display: flex; gap: 15px;">
-                <div style="flex: 1;">
+            <div class="grid-2">
+                <div>
                     <label>🔢 تعداد سرورهای عمومی برتر:</label>
                     <input type="number" id="top-count" value="20" min="5" max="100">
                 </div>
             </div>
 
-            <button class="btn" onclick="updateConfigOnGithub()">💾 ذخیره این پروفایل روی گیت‌هاب</button>
-            <button class="btn btn-run" onclick="triggerWorkflow()">🚀 اجرای فوری تست سرعت</button>
+            <div style="margin-top: 15px;">
+                <button class="btn" onclick="updateConfigOnGithub()">💾 ذخیره این پروفایل</button>
+                <button class="btn btn-run" onclick="triggerWorkflow()">🚀 اجرای فوری تست سرعت</button>
+                <button class="btn btn-danger" id="delete-btn" onclick="deleteCurrentProfile()">🗑️ حذف این پروفایل</button>
+            </div>
 
             <div class="status" id="status-msg"></div>
         </div>
     </div>
 
     <script>
-        let fullConfig = { profiles: { default: { brand_name: "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽", personal: [], subs: [], top_count: 20 } } };
+        let fullConfig = { profiles: { default: { brand_name: "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽", personal: [], subs: [], top_count: 20, total_gb: 50, expire_days: 30 } } };
         let activeProfile = "default";
 
         document.getElementById('gh-token').value = localStorage.getItem('gh_token') || '';
@@ -114,6 +130,9 @@
             document.getElementById('url-clash').innerText = baseUrl + 'clash' + suffix + '.yaml';
             document.getElementById('url-singbox').innerText = baseUrl + 'singbox' + suffix + '.json';
             document.getElementById('current-profile-title').innerText = activeProfile;
+            
+            // مخفی کردن دکمه حذف برای پروفایل پیش‌فرض
+            document.getElementById('delete-btn').style.display = activeProfile === "default" ? "none" : "inline-block";
         }
 
         function renderProfileSelect() {
@@ -129,8 +148,10 @@
         }
 
         function loadActiveProfileData() {
-            const pData = fullConfig.profiles[activeProfile] || { brand_name: '', personal: [], subs: [], top_count: 20 };
+            const pData = fullConfig.profiles[activeProfile] || { brand_name: '', personal: [], subs: [], top_count: 20, total_gb: 50, expire_days: 30 };
             document.getElementById('brand-name').value = pData.brand_name || '';
+            document.getElementById('total-gb').value = pData.total_gb || 50;
+            document.getElementById('expire-days').value = pData.expire_days || 30;
             document.getElementById('personal-nodes').value = (pData.personal || []).join('\n');
             document.getElementById('sub-urls').value = (pData.subs || []).join('\n');
             document.getElementById('top-count').value = pData.top_count || 20;
@@ -145,11 +166,13 @@
         function createNewProfile() {
             const nameInput = document.getElementById('new-profile-name');
             const name = nameInput.value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-            if (!name) return alert('لطفا یک نام لاتین ساده وارد کنید (مانند user2)');
+            if (!name) return alert('لطفا یک نام لاتین ساده وارد کنید (مانند nafas)');
             if (fullConfig.profiles[name]) return alert('این پروفایل از قبل وجود دارد.');
 
             fullConfig.profiles[name] = {
                 brand_name: "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 - " + name,
+                total_gb: 50,
+                expire_days: 30,
                 personal: [],
                 subs: [],
                 top_count: 20
@@ -160,22 +183,26 @@
             loadActiveProfileData();
         }
 
+        async function deleteCurrentProfile() {
+            if (activeProfile === "default") return alert('پروفایل پیش‌فرض قابل حذف نیست.');
+            
+            if (!confirm(`آیا از حذف کامل پروفایل "${activeProfile}" و لینک‌های آن اطمینان دارید؟`)) return;
+
+            delete fullConfig.profiles[activeProfile];
+            const deletedProf = activeProfile;
+            activeProfile = "default";
+            
+            renderProfileSelect();
+            loadActiveProfileData();
+            
+            await updateConfigOnGithub(`Delete profile ${deletedProf}`);
+            triggerWorkflow();
+        }
+
         fetch('config.json?t=' + Date.now())
             .then(r => r.json())
             .then(data => {
                 if (data.profiles) fullConfig = data;
-                else {
-                    fullConfig = {
-                        profiles: {
-                            default: {
-                                brand_name: data.brand_name || "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽",
-                                personal: data.personal || [],
-                                subs: data.subs || [],
-                                top_count: data.top_count || 20
-                            }
-                        }
-                    };
-                }
                 renderProfileSelect();
                 loadActiveProfileData();
             }).catch(() => {
@@ -183,7 +210,7 @@
                 loadActiveProfileData();
             });
 
-        async function updateConfigOnGithub() {
+        async function updateConfigOnGithub(customMsg) {
             const token = localStorage.getItem('gh_token');
             const owner = localStorage.getItem('gh_owner');
             const repo = localStorage.getItem('gh_repo');
@@ -193,13 +220,16 @@
 
             status.innerText = "در حال ذخیره‌سازی تنظیمات در گیت‌هاب...";
 
-            // ذخیره اطلاعات فرم فعلی روی پروفایل اکتیو
-            fullConfig.profiles[activeProfile] = {
-                brand_name: document.getElementById('brand-name').value.trim() || '𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽',
-                personal: document.getElementById('personal-nodes').value.split('\n').map(s=>s.trim()).filter(Boolean),
-                subs: document.getElementById('sub-urls').value.split('\n').map(s=>s.trim()).filter(Boolean),
-                top_count: parseInt(document.getElementById('top-count').value) || 20
-            };
+            if (fullConfig.profiles[activeProfile]) {
+                fullConfig.profiles[activeProfile] = {
+                    brand_name: document.getElementById('brand-name').value.trim() || '𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽',
+                    total_gb: parseInt(document.getElementById('total-gb').value) || 50,
+                    expire_days: parseInt(document.getElementById('expire-days').value) || 30,
+                    personal: document.getElementById('personal-nodes').value.split('\n').map(s=>s.trim()).filter(Boolean),
+                    subs: document.getElementById('sub-urls').value.split('\n').map(s=>s.trim()).filter(Boolean),
+                    top_count: parseInt(document.getElementById('top-count').value) || 20
+                };
+            }
 
             let sha = "";
             try {
@@ -216,13 +246,14 @@
             const encodedContent = btoa(unescape(encodeURIComponent(jsonString)));
 
             try {
+                const msg = customMsg || `Update profile (${activeProfile})`;
                 const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/public/config.json`, {
                     method: 'PUT',
                     headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: `Update profiles config via Web Panel (${activeProfile})`, content: encodedContent, sha: sha })
+                    body: JSON.stringify({ message: msg, content: encodedContent, sha: sha })
                 });
 
-                if (res.ok) status.innerText = `✅ پروفایل ${activeProfile} با موفقیت ذخیره شد!`;
+                if (res.ok) status.innerText = `✅ تغییرات با موفقیت ذخیره شد!`;
                 else status.innerText = "❌ خطا در ذخیره تنظیمات.";
             } catch (e) {
                 status.innerText = "❌ خطا: " + e.message;
@@ -237,14 +268,14 @@
 
             if (!token || !owner || !repo) return alert('مشخصات اتصال کامل نیست.');
 
-            status.innerText = "در حال ارسال دستور تست سرعت به اکشن...";
+            status.innerText = "در حال ارسال دستور بروزرسانی به گیت‌هاب...";
             try {
                 const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/main.yml/dispatches`, {
                     method: 'POST',
                     headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ref: 'main' })
                 });
-                if (res.status === 204) status.innerText = "🚀 تست سرعت شروع شد! کلیه پروفایل‌ها تا ۳ الی ۵ دقیقه دیگر خروجی جدید می‌گیرند.";
+                if (res.status === 204) status.innerText = "🚀 بروزرسانی شروع شد! فایل‌ها تا ۳ الی ۵ دقیقه دیگر آپدیت می‌شوند.";
                 else status.innerText = "❌ خطا در اجرای تست فوری.";
             } catch (e) {
                 status.innerText = "❌ خطا: " + e.message;
