@@ -2,6 +2,8 @@
   "profiles": {
     "default": {
       "brand_name": "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 ❻❽",
+      "total_gb": 50,
+      "expire_days": 30,
       "personal": [
         "vless://153639be-6109-4037-9ea5-996754061bb6@web-production-7c324.up.railway.app:443?path=%2Fvl-ws&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=web-production-7c324.up.railway.app&fp=chrome&type=ws&allowInsecure=0&sni=web-production-7c324.up.railway.app#%F0%9F%87%B3%F0%9F%87%B1-%F0%9D%94%B8%F0%9D%95%A3%F0%9D%95%A4%F0%9D%95%96%F0%9D%95%9F%F0%9D%95%8D%E2%84%99%E2%84%95%F0%93%84%82%F0%93%86%83",
         "vmess://eyJhZGQiOiJ3ZWItcHJvZHVjdGlvbi03YzMyNC51cC5yYWlsd2F5LmFwcCIsImFpZCI6IjAiLCJhbHBuIjoiaHR0cC8xLjEiLCJmcCI6IiIsImhvc3QiOiJ3ZWItcHJvZHVjdGlvbi03YzMyNC51cC5yYWlsd2F5LmFwcCIsImlkIjoiMTUzNjM5YmUtNjEwOS00MDM3LTllYTUtOTk2NzU0MDYxYmI2IiwiaW5zZWN1cmUiOiIwIiwibmV0Ijoid3MiLCJwYXRoIjoiL3ZtLXdzIiwicGNzIjoiIiwicG9ydCI6IjQ0MyIsInBzIjoi8J+Hs/Cfh7Et8J2UuPCdlaPwnZWk8J2VlvCdlZ/wnZWN4oSZ4oSV8JOEgvCThoMiLCJzY3kiOiJhdXRvIiwic25pIjoid2ViLXByb2R1Y3Rpb24tN2MzMjQudXAucmFpbHdheS5hcHAiLCJ0bHMiOiJ0bHMiLCJ0eXBlIjoiLS0tIiwidiI6IjIiLCJ2Y24iOiIifQ==",
