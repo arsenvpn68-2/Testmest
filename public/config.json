@@ -24,7 +24,11 @@
       "brand_name": "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 - nafas",
       "total_gb": 100,
       "expire_days": 30,
-      "personal": [],
+      "personal": [
+        "vless://52b02421-e04c-4523-8268-a903f3875b60@grimness-backlogs.cdn-content.com:443?path=%2Fws&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=grimness-backlogs.cdn-content.com&fp=chrome&type=ws&allowInsecure=0&sni=grimness-backlogs.cdn-content.com#xray1-front-mci1-fs-ce-ws-0d6f2b",
+        "vless://52b02421-e04c-4523-8268-a903f3875b60@ghosts-spasm.quick-cdn.net:443?path=%2Fws&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=ghosts-spasm.quick-cdn.net&fp=chrome&type=ws&allowInsecure=0&sni=ghosts-spasm.quick-cdn.net#xray1-front-mci1-fs-ce-ws-50cc9d",
+        "vless://52b02421-e04c-4523-8268-a903f3875b60@bounded-crammed.video-streams.org:443?path=%2Fws&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=bounded-crammed.video-streams.org&fp=chrome&type=ws&allowInsecure=0&sni=bounded-crammed.video-streams.org#xray1-front-mci1-fs-ce-ws-8619c3"
+      ],
       "subs": [
         "https://ju1nrwykr8zgh6489.panel3-3.workers.dev/oFYYdLbFGoAVO/sub/normal?app=xray#%F0%9F%92%A6%20BPB%20Normal"
       ],
