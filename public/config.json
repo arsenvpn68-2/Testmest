@@ -18,12 +18,15 @@
       "total_gb": 100,
       "expire_days": 30,
       "personal": [
-        "vless://52b02421-e04c-4523-8268-a903f3875b60@grimness-backlogs.cdn-content.com:443?path=%2Fws&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=grimness-backlogs.cdn-content.com&fp=chrome&type=ws&allowInsecure=0&sni=grimness-backlogs.cdn-content.com#xray1-front-mci1-fs-ce-ws-0d6f2b",
-        "vless://52b02421-e04c-4523-8268-a903f3875b60@ghosts-spasm.quick-cdn.net:443?path=%2Fws&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=ghosts-spasm.quick-cdn.net&fp=chrome&type=ws&allowInsecure=0&sni=ghosts-spasm.quick-cdn.net#xray1-front-mci1-fs-ce-ws-50cc9d",
-        "vless://52b02421-e04c-4523-8268-a903f3875b60@bounded-crammed.video-streams.org:443?path=%2Fws&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=bounded-crammed.video-streams.org&fp=chrome&type=ws&allowInsecure=0&sni=bounded-crammed.video-streams.org#xray1-front-mci1-fs-ce-ws-8619c3"
+        "vless://92653b33-46a5-4fa8-8e6f-3041c119b341@vodimodi-production.up.railway.app:443?path=%2Fws%2F92653b33-46a5-4fa8-8e6f-3041c119b341&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=vodimodi-production.up.railway.app&fp=chrome&type=ws&allowInsecure=0&sni=vodimodi-production.up.railway.app#Client1",
+        "vless://0d064580-7ba1-2636-f31c-c2859ec06108@vodimodi-production.up.railway.app:443?path=%2Fws%2F0d064580-7ba1-2636-f31c-c2859ec06108&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=vodimodi-production.up.railway.app&fp=chrome&type=ws&allowInsecure=0&sni=vodimodi-production.up.railway.app#Client1",
+        "ss://YWVzLTI1Ni1nY206YTM4NmY3MTEtYTJhZi00YjIxLTg4MzctNWU4MzYxYTM0NDJm@51.75.118.165:20311#SS-AS16276_OVH_SAS-Lille",
+        "socks://Og@51.75.118.165:20311#SOCKS5-AS16276_OVH_SAS-Lille",
+        "vless://a42271e4-575a-4b0c-866f-9215b81622fb@explanation-mail-thunder-hugh.trycloudflare.com:443?path=%2Fvless-argo%3Fed%3D2560&security=tls&encryption=none&insecure=0&host=explanation-mail-thunder-hugh.trycloudflare.com&type=ws&allowInsecure=0&sni=explanation-mail-thunder-hugh.trycloudflare.com#vless-AS16276_OVH_SAS-Lille",
+        "vless://92653b33-46a5-4fa8-8e6f-3041c119b341@vodimodi-production.up.railway.app:443?path=%2Fws%2F92653b33-46a5-4fa8-8e6f-3041c119b341&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=vodimodi-production.up.railway.app&fp=chrome&type=ws&allowInsecure=0&sni=vodimodi-production.up.railway.app#nafas"
       ],
       "subs": [
-        "https://ju1nrwykr8zgh6489.panel3-3.workers.dev/oFYYdLbFGoAVO/sub/raw?app=xray#%F0%9F%92%A6%20BPB%20Raw"
+        "https://arsenvpn68-nnnnnn.panel2-2.workers.dev/sync?sub=%F0%93%84%82nafas%F0%93%86%83%E2%9D%BB%E2%9D%BD"
       ],
       "top_count": 77
     }
