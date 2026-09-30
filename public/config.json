@@ -5,12 +5,7 @@
       "total_gb": 50,
       "expire_days": 30,
       "personal": [],
-      "subs": [
-        "vless://16dc8391-a0f8-9091-4a28-f5b6e9cfd516@netherlandsnl.up.railway.app:443?mode=packet-up&path=%2Fxhttp-siz10%2Fpacket-up%2F16dc8391-a0f8-9091-4a28-f5b6e9cfd516&security=tls&alpn=h2&encryption=none&insecure=0&host=netherlandsnl.up.railway.app&fp=chrome&type=xhttp&allowInsecure=0&sni=netherlandsnl.up.railway.app#%F0%9F%8C%B9%D8%AE%D9%88%D8%B4%DA%AF%D9%84%20%D8%AA%D8%B1%DB%8C%D9%86%20%D8%AF%D8%AE%D8%AA%D8%B1%20%D8%AF%D9%86%DB%8C%D8%A7%F0%9F%8C%B9",
-        "vless://b494df76-78fe-2d8b-6d74-8494a49edb32@netherlandsnl.up.railway.app:443?mode=stream-up&path=%2Fxhttp-siz10%2Fstream-up%2Fb494df76-78fe-2d8b-6d74-8494a49edb32&security=tls&alpn=h2&encryption=none&insecure=0&host=netherlandsnl.up.railway.app&fp=chrome&type=xhttp&allowInsecure=0&sni=netherlandsnl.up.railway.app#%E2%9D%A4%EF%B8%8F%D8%A7%D8%B2%20%D8%AA%D9%87%20%D9%82%D9%84%D8%A8%D9%85%E2%9D%A4%EF%B8%8F",
-        "vless://1ed5cff9-f9f0-4ff7-4391-1754fc7a5aa4@netherlandsnl.up.railway.app:443?path=%2Fws%2F1ed5cff9-f9f0-4ff7-4391-1754fc7a5aa4&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=netherlandsnl.up.railway.app&fp=chrome&type=ws&allowInsecure=0&sni=netherlandsnl.up.railway.app#%F0%9F%98%8D%D8%AF%D9%88%D8%B3%D8%AA%20%D8%AF%D8%A7%D8%B1%D9%85%F0%9F%98%8D",
-        "vless://f561eb44-9f96-7308-5355-e9c919ed5794@vodimodi-production.up.railway.app:443?path=%2Fws%2Ff561eb44-9f96-7308-5355-e9c919ed5794&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=vodimodi-production.up.railway.app&fp=chrome&type=ws&allowInsecure=0&sni=vodimodi-production.up.railway.app#%E2%9D%A4%EF%B8%8F%F0%9F%A7%BFM_N%F0%9F%A7%BF%E2%9D%A4%EF%B8%8F"
-      ],
+      "subs": [],
       "top_count": 100
     },
     "nafas": {
