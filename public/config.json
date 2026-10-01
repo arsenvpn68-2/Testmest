@@ -14,12 +14,14 @@
       "expire_days": 30,
       "personal": [
         "vless://1c5ed2e1-56da-41ab-9a78-159d9892ec17@185.147.26.210:443?security=reality&encryption=none&pbk=9rdvkUGJyNbRvsB0Pp06h1URq9AHDPRtH9-wmNB1-j4&headerType=none&fp=firefox&type=tcp&flow=xtls-rprx-vision&sni=example.com&sid=e4aa362b5f9d07d7#%F0%9F%8C%B9%D8%AE%D9%88%D8%B4%DA%AF%D9%84%20%D8%AA%D8%B1%DB%8C%D9%86%20%D8%AF%D8%AE%D8%AA%D8%B1%20%D8%AF%D9%86%DB%8C%D8%A7%F0%9F%8C%B9",
-        "vless://5d16ac22-6eea-426f-b778-6f4c2961faef@45.132.176.161:9889?security=reality&encryption=none&pbk=ycPIUcY6ci2yi7YA_OHc20e4gzxEdJTqpmeShxSuHRU&fp=random&type=grpc&serviceName=grpc-tunnel&sni=dl.google.com&sid=aa#%E2%9D%A4%EF%B8%8F%D8%A7%D8%B2%20%D8%AA%D9%87%20%D9%82%D9%84%D8%A8%D9%85%E2%9D%A4%EF%B8%8F",
-        "vless://af2bf319-ba88-4fec-8317-2b6a8cee96d1@deak.nightfall.best:443?security=reality&encryption=none&pbk=PXXlrVQY5AKp9J-vSQ-C9AJr6eaeHmUdFgEesscILT4&headerType=none&fp=random&type=tcp&flow=xtls-rprx-vision&sni=deak.nightfall.best#%F0%9F%98%8D%D8%AF%D9%88%D8%B3%D8%AA%20%D8%AF%D8%A7%D8%B1%D9%85%F0%9F%98%8D",
+        "vless://e7072c36-c033-48bc-977f-084f149632a9@xray1-direct-mci1-fs-ce.freesocks.work:443?security=reality&encryption=none&pbk=7j3hmlHrEDk3Kjx-dFG3E3jf0c6PZF45trIPFsuKWmI&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision&sni=dl.google.com#%E2%9D%A4%EF%B8%8F%D8%A7%D8%B2%20%D8%AA%D9%87%20%D9%82%D9%84%D8%A8%D9%85%E2%9D%A4%EF%B8%8F",
+        "trojan://RLr%3A3V6N7H0D9g-PRb_%3B@[2606:4700:d0::2922:4090:da94:58fb]:443?path=%2Ftr%2FI0TFKKehkeCEjxPENlFX3M%3Fed%3D2560&security=tls&alpn=http%2F1.1&insecure=0&host=4cpufb9mh4rltev0.8nalytb6tg50jr4wg.workers.dev&fp=randomized&type=ws&allowInsecure=0&sni=4CPufb9MH4rlTeV0.8nalytB6TG50jr4WG.wOrkerS.Dev#%F0%9F%98%8D%D8%AF%D9%88%D8%B3%D8%AA%20%D8%AF%D8%A7%D8%B1%D9%85%F0%9F%98%8D",
         "vless://f561eb44-9f96-7308-5355-e9c919ed5794@vodimodi-production.up.railway.app:443?path=%2Fws%2Ff561eb44-9f96-7308-5355-e9c919ed5794&security=tls&alpn=http%2F1.1&encryption=none&insecure=0&host=vodimodi-production.up.railway.app&fp=chrome&type=ws&allowInsecure=0&sni=vodimodi-production.up.railway.app#%E2%9D%A4%EF%B8%8F%F0%9F%A7%BFM_N%F0%9F%A7%BF%E2%9D%A4%EF%B8%8F"
       ],
-      "subs": [],
-      "top_count": 77
+      "subs": [
+        "https://ediiii.panel2-2.workers.dev/sub?token=c0e9138488a5168e6dee7a04dbdf27a0"
+      ],
+      "top_count": 30
     },
     "hamid": {
       "brand_name": "𝔸𝕣𝕤𝕖𝕟VPℕ𓄂𓆃 - hamid",
