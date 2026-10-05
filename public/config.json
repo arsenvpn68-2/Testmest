@@ -50,7 +50,7 @@
         "aether://[2606:4700:d1:0:9455:f422:e08f:e40e]:946?protocol=wg&scan=turbo&ip=v6&psiphon=chain&psiphon_mode=auto&region=ZA#South-Africa%20%F0%9F%87%BF%F0%9F%87%A6"
       ],
       "subs": [
-        "https://ediiii.panel2-2.workers.dev/sub?token=c0e9138488a5168e6dee7a04dbdf27a0"
+        "https://raw.githubusercontent.com/arsenvpn68-2/Server/refs/heads/main/Myserver"
       ],
       "top_count": 50
     },
