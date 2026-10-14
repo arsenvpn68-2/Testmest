@@ -106,7 +106,9 @@
         "aether://[2606:4700:d0:0:2617:6100:982:258]:8854?protocol=wg&scan=turbo&ip=v6&psiphon=chain&psiphon_mode=auto&region=US#United-States%20%F0%9F%87%BA%F0%9F%87%B8",
         "aether://[2606:4700:d1:0:9455:f422:e08f:e40e]:946?protocol=wg&scan=turbo&ip=v6&psiphon=chain&psiphon_mode=auto&region=ZA#South-Africa%20%F0%9F%87%BF%F0%9F%87%A6"
       ],
-      "subs": [],
+      "subs": [
+        "https://digikala.panel4-4.workers.dev/sub?token=dc537ec576c74d87118faf73934fdaf4"
+      ],
       "top_count": 20
     }
   }
